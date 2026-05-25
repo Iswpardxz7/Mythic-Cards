@@ -1,0 +1,271 @@
+<div id="screen-title" class="screen active">
+  <div class="title-logo">⚔ Mythic Cards ⚔</div>
+  <div class="title-sub">✦ Anime Battle Arena ✦</div>
+  <nav class="hub-nav" id="main-hub-nav">
+    <button type="button" class="hub-nav-btn active" data-tab="title" onclick="showHubTab('title')">🏠 Inicio</button>
+    <button type="button" class="hub-nav-btn" data-tab="modes" onclick="showHubTab('modes')">⚔ Modos</button>
+    <button type="button" class="hub-nav-btn" data-tab="shop" onclick="showHubTab('shop')">🛒 Tienda</button>
+    <button type="button" class="hub-nav-btn" data-tab="missions" onclick="showHubTab('missions')">📜 Misiones</button>
+    <button type="button" class="hub-nav-btn" data-tab="wheel" onclick="showHubTab('wheel')">🎡 Ruleta</button>
+    <button type="button" class="hub-nav-btn" data-tab="ranking" onclick="showHubTab('ranking')">🏆 Ranking</button>
+  </nav>
+  <div class="title-cards-preview" id="preview-cards"></div>
+  <p class="collection-count" id="collection-count">Reclama tu pack (7 cartas)</p>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;margin-top:0.5rem;">
+    <button type="button" class="btn-primary" onclick="startGame()">⚔ Batalla Rápida PvP</button>
+    <button type="button" class="btn-secondary" onclick="showHubTab('modes')" style="margin-top:-0.3rem;">🎮 Ver Todos los Modos</button>
+    <div style="font-size:0.8rem;color:#6b7280;font-family:Cinzel,serif;">7 cartas del pack · Stats según el anime</div>
+  </div>
+</div>
+
+<!-- ═══════════════ MODOS DE JUEGO ═══════════════ -->
+<div id="screen-modes" class="screen">
+  <nav class="hub-nav">
+    <button type="button" class="hub-nav-btn" data-tab="title" onclick="showHubTab('title')">🏠 Inicio</button>
+    <button type="button" class="hub-nav-btn active" data-tab="modes" onclick="showHubTab('modes')">⚔ Modos</button>
+    <button type="button" class="hub-nav-btn" data-tab="shop" onclick="showHubTab('shop')">🛒 Tienda</button>
+    <button type="button" class="hub-nav-btn" data-tab="missions" onclick="showHubTab('missions')">📜 Misiones</button>
+    <button type="button" class="hub-nav-btn" data-tab="wheel" onclick="showHubTab('wheel')">🎡 Ruleta</button>
+    <button type="button" class="hub-nav-btn" data-tab="ranking" onclick="showHubTab('ranking')">🏆 Ranking</button>
+  </nav>
+  <div class="meta-panel modes-panel">
+    <h2 class="modes-header">⚔ Modos de Juego</h2>
+    <p class="modes-sub">Elige tu forma de batalla</p>
+    <div class="game-modes-grid">
+
+      <div class="mode-card mode-pvp" onclick="startGame()">
+        <div class="mode-icon">⚔</div>
+        <div class="mode-info">
+          <div class="mode-name">PvP Local</div>
+          <div class="mode-desc">Batalla contra un amigo en el mismo dispositivo</div>
+        </div>
+        <div class="mode-badge badge-available">DISPONIBLE</div>
+      </div>
+
+      <div class="mode-card mode-campaign" onclick="showGameMode('campaign')">
+        <div class="mode-icon">📖</div>
+        <div class="mode-info">
+          <div class="mode-name">Campaña</div>
+          <div class="mode-desc">Historia épica con misiones, diálogos y recompensas progresivas</div>
+        </div>
+        <div class="mode-badge badge-new">NUEVO</div>
+      </div>
+
+      <div class="mode-card mode-pvp" onclick="showGameMode('pvp')">
+        <div class="mode-icon">⚔</div>
+        <div class="mode-info">
+          <div class="mode-name">Retos PvP</div>
+          <div class="mode-desc">Invita a un amigo para un 1v1 · Ganador: 100 💎</div>
+        </div>
+        <div class="mode-badge badge-new">NUEVO</div>
+      </div>
+
+      <div class="mode-card mode-ranked" onclick="showGameMode('ranked')">
+        <div class="mode-icon">🏆</div>
+        <div class="mode-info">
+          <div class="mode-name">Ranked / Torneos</div>
+          <div class="mode-desc">Sistema competitivo con ELO, rangos y recompensas de temporada</div>
+        </div>
+        <div class="mode-badge badge-new">NUEVO</div>
+      </div>
+
+      <div class="mode-card mode-events" onclick="showGameMode('events')">
+        <div class="mode-icon">🌟</div>
+        <div class="mode-info">
+          <div class="mode-name">Eventos Temporales</div>
+          <div class="mode-desc">Reglas únicas, cartas limitadas y modificadores especiales</div>
+        </div>
+        <div class="mode-badge badge-event">EVENTO</div>
+      </div>
+
+      <div class="mode-card mode-draft" onclick="showGameMode('draft')">
+        <div class="mode-icon">🎴</div>
+        <div class="mode-info">
+          <div class="mode-name">Draft / Arena</div>
+          <div class="mode-desc">Construye un mazo rápido eligiendo cartas aleatorias</div>
+        </div>
+        <div class="mode-badge badge-new">NUEVO</div>
+      </div>
+
+      <div class="mode-card mode-coop" onclick="showGameMode('coop')">
+        <div class="mode-icon">🤝</div>
+        <div class="mode-info">
+          <div class="mode-name">Cooperativo</div>
+          <div class="mode-desc">2 jugadores vs IA avanzada con habilidades compartidas</div>
+        </div>
+        <div class="mode-badge badge-new">NUEVO</div>
+      </div>
+
+      <div class="mode-card mode-puzzle" onclick="showGameMode('puzzle')">
+        <div class="mode-icon">🧩</div>
+        <div class="mode-info">
+          <div class="mode-name">Puzzles Estratégicos</div>
+          <div class="mode-desc">Resuelve escenarios especiales en pocos turnos</div>
+        </div>
+        <div class="mode-badge badge-new">NUEVO</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ CAMPAÑA ═══════════════ -->
+<div id="screen-campaign" class="screen">
+  <nav class="hub-nav">
+    <button type="button" class="hub-nav-btn" onclick="showHubTab('modes')">← Volver</button>
+    <div class="hub-nav-title">📖 Campaña</div>
+  </nav>
+  <div class="meta-panel campaign-panel">
+    <div class="campaign-header">
+      <h2>📖 El Torneo de los Mundos</h2>
+      <p class="campaign-intro">Los mundos del anime colisionaron. Eres el único que puede detener el caos reuniendo a los guerreros más poderosos.</p>
+    </div>
+    <div class="campaign-chapters" id="campaign-chapters"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ PvP 1v1 ═══════════════ -->
+<div id="screen-pvp" class="screen">
+  <nav class="hub-nav">
+    <button type="button" class="hub-nav-btn" onclick="showHubTab('modes')">← Volver</button>
+    <div class="hub-nav-title">⚔ Retos PvP</div>
+  </nav>
+  <div class="meta-panel">
+    <h2>⚔ Desafío 1v1 contra Amigos</h2>
+    <p class="modes-sub">Selecciona un amigo para invitar. Si acepta, el combate empezará en 5s. Ganador recibe 100 💎.</p>
+    <div id="pvp-friends-list" class="pvp-friends-list"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ RANKED ═══════════════ -->
+<div id="screen-ranked" class="screen">
+  <nav class="hub-nav">
+    <button type="button" class="hub-nav-btn" onclick="showHubTab('modes')">← Volver</button>
+    <div class="hub-nav-title">🏆 Ranked</div>
+  </nav>
+  <div class="meta-panel">
+    <h2>🏆 Modo Clasificatorio</h2>
+    <div class="ranked-info" id="ranked-info"></div>
+    <div class="ranked-actions">
+      <button class="btn-primary" onclick="startRankedMatch()">🔍 Buscar Partida Ranked</button>
+      <button class="btn-secondary" onclick="showHubTab('ranking')">📊 Ver Clasificación Global</button>
+    </div>
+    <div class="season-rewards" id="season-rewards"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ EVENTOS ═══════════════ -->
+<div id="screen-events" class="screen">
+  <nav class="hub-nav">
+    <button type="button" class="hub-nav-btn" onclick="showHubTab('modes')">← Volver</button>
+    <div class="hub-nav-title">🌟 Eventos</div>
+  </nav>
+  <div class="meta-panel">
+    <h2>🌟 Eventos Temporales</h2>
+    <div class="event-timer" id="event-timer"></div>
+    <div class="events-list" id="events-list"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ DRAFT ═══════════════ -->
+<div id="screen-draft" class="screen">
+  <nav class="hub-nav">
+    <button type="button" class="hub-nav-btn" onclick="showHubTab('modes')">← Volver</button>
+    <div class="hub-nav-title">🎴 Draft / Arena</div>
+  </nav>
+  <div class="meta-panel">
+    <h2>🎴 Modo Draft</h2>
+    <div id="draft-content"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ COOPERATIVO ═══════════════ -->
+<div id="screen-coop" class="screen">
+  <nav class="hub-nav">
+    <button type="button" class="hub-nav-btn" onclick="showHubTab('modes')">← Volver</button>
+    <div class="hub-nav-title">🤝 Cooperativo</div>
+  </nav>
+  <div class="meta-panel">
+    <h2>🤝 Modo Cooperativo</h2>
+    <div id="coop-content"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ PUZZLES ═══════════════ -->
+<div id="screen-puzzle" class="screen">
+  <nav class="hub-nav">
+    <button type="button" class="hub-nav-btn" onclick="showHubTab('modes')">← Volver</button>
+    <div class="hub-nav-title">🧩 Puzzles</div>
+  </nav>
+  <div class="meta-panel">
+    <h2>🧩 Desafíos Estratégicos</h2>
+    <div id="puzzle-content"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ TIENDA ═══════════════ -->
+<div id="screen-shop" class="screen">
+  <nav class="hub-nav">
+    <button type="button" class="hub-nav-btn" data-tab="title" onclick="showHubTab('title')">🏠 Inicio</button>
+    <button type="button" class="hub-nav-btn" data-tab="modes" onclick="showHubTab('modes')">⚔ Modos</button>
+    <button type="button" class="hub-nav-btn active" data-tab="shop" onclick="showHubTab('shop')">🛒 Tienda</button>
+    <button type="button" class="hub-nav-btn" data-tab="missions" onclick="showHubTab('missions')">📜 Misiones</button>
+    <button type="button" class="hub-nav-btn" data-tab="wheel" onclick="showHubTab('wheel')">🎡 Ruleta</button>
+    <button type="button" class="hub-nav-btn" data-tab="ranking" onclick="showHubTab('ranking')">🏆 Ranking</button>
+  </nav>
+  <div class="meta-panel"><h2>🛒 Tienda de Cartas</h2><div class="shop-grid" id="shop-packs"></div></div>
+</div>
+
+<!-- ═══════════════ MISIONES ═══════════════ -->
+<div id="screen-missions" class="screen">
+  <nav class="hub-nav">
+    <button type="button" class="hub-nav-btn" data-tab="title" onclick="showHubTab('title')">🏠 Inicio</button>
+    <button type="button" class="hub-nav-btn" data-tab="modes" onclick="showHubTab('modes')">⚔ Modos</button>
+    <button type="button" class="hub-nav-btn" data-tab="shop" onclick="showHubTab('shop')">🛒 Tienda</button>
+    <button type="button" class="hub-nav-btn active" data-tab="missions" onclick="showHubTab('missions')">📜 Misiones</button>
+    <button type="button" class="hub-nav-btn" data-tab="wheel" onclick="showHubTab('wheel')">🎡 Ruleta</button>
+    <button type="button" class="hub-nav-btn" data-tab="ranking" onclick="showHubTab('ranking')">🏆 Ranking</button>
+  </nav>
+  <div class="meta-panel"><h2>📜 Misiones Diarias</h2><div class="mission-list" id="missions-list"></div></div>
+</div>
+
+<!-- ═══════════════ RULETA ═══════════════ -->
+<div id="screen-wheel" class="screen">
+  <nav class="hub-nav">
+    <button type="button" class="hub-nav-btn" data-tab="title" onclick="showHubTab('title')">🏠 Inicio</button>
+    <button type="button" class="hub-nav-btn" data-tab="modes" onclick="showHubTab('modes')">⚔ Modos</button>
+    <button type="button" class="hub-nav-btn" data-tab="shop" onclick="showHubTab('shop')">🛒 Tienda</button>
+    <button type="button" class="hub-nav-btn" data-tab="missions" onclick="showHubTab('missions')">📜 Misiones</button>
+    <button type="button" class="hub-nav-btn active" data-tab="wheel" onclick="showHubTab('wheel')">🎡 Ruleta</button>
+    <button type="button" class="hub-nav-btn" data-tab="ranking" onclick="showHubTab('ranking')">🏆 Ranking</button>
+  </nav>
+  <div class="meta-panel wheel-container">
+    <h2>🎡 Ruleta Fake</h2>
+    <div class="wheel-wrapper">
+      <div class="wheel-pointer">▼</div>
+      <div class="wheel-lights"></div>
+      <div class="wheel-canvas-wrap"><canvas id="wheel-canvas"></canvas></div>
+    </div>
+    <p class="wheel-mystery-text">Llena de premios ocultos. El resultado se revela solo al detenerse.</p>
+    <button type="button" class="wheel-spin-btn" id="wheel-spin-btn">Girar (50 💎)</button>
+  </div>
+</div>
+
+<!-- ═══════════════ RANKING ═══════════════ -->
+<div id="screen-ranking" class="screen">
+  <nav class="hub-nav">
+    <button type="button" class="hub-nav-btn" data-tab="title" onclick="showHubTab('title')">🏠 Inicio</button>
+    <button type="button" class="hub-nav-btn" data-tab="modes" onclick="showHubTab('modes')">⚔ Modos</button>
+    <button type="button" class="hub-nav-btn" data-tab="shop" onclick="showHubTab('shop')">🛒 Tienda</button>
+    <button type="button" class="hub-nav-btn" data-tab="missions" onclick="showHubTab('missions')">📜 Misiones</button>
+    <button type="button" class="hub-nav-btn" data-tab="wheel" onclick="showHubTab('wheel')">🎡 Ruleta</button>
+    <button type="button" class="hub-nav-btn active" data-tab="ranking" onclick="showHubTab('ranking')">🏆 Ranking</button>
+  </nav>
+  <div class="meta-panel">
+    <h2>🏆 Ranking de Jugadores</h2>
+    <table class="ranking-table">
+      <thead><tr><th>#</th><th>Nombre</th><th>Victorias</th><th>Rango</th><th>Puntos</th></tr></thead>
+      <tbody id="ranking-body"></tbody>
+    </table>
+  </div>
+</div>
