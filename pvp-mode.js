@@ -369,12 +369,19 @@ function subscribeToPvPMatch(matchId) {
         const match = payload.new;
         console.log('📊 Match actualizado:', match);
 
-        // Si ambos jugadores jugaron, procesar resultado
-        if (match.player1_card && match.player2_card && match.winner_id) {
+        // Si ambos jugadores jugaron Y tenemos resultado, procesar
+        if (
+          match.player1_card && 
+          match.player2_card && 
+          (match.winner_id !== undefined || match.last_round_result)
+        ) {
+          console.log('✅ Ambos jugadores tienen cartas + resultado disponible');
           handlePvPResult(match);
         }
         // Si el otro jugador jugó, mostrar dorso de su carta
         else if (
+          match.player1_card && 
+          match.player2_card &&
           (pvpPlayerRole === 'player1' && match.player2_card) ||
           (pvpPlayerRole === 'player2' && match.player1_card)
         ) {
@@ -383,6 +390,8 @@ function subscribeToPvPMatch(matchId) {
       }
     )
     .subscribe();
+
+  console.log('🔔 Suscrito a cambios de match:', matchId);
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -417,6 +426,59 @@ window.sendPvPCardSelection = async function (cardName) {
 };
 
 /* ═══════════════════════════════════════════════════════════
+   ENVIAR RESULTADO DE RONDA (NUEVO)
+═══════════════════════════════════════════════════════════ */
+
+window.sendPvPCombatResult = async function (player1Total, player2Total, winnerRole) {
+  if (!window._pvpMode || !pvpActiveMatch) {
+    console.log('⚠️ sendPvPCombatResult: Sin match activo');
+    return;
+  }
+
+  const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
+  if (!user) {
+    console.log('⚠️ sendPvPCombatResult: Sin usuario actual');
+    return;
+  }
+
+  const sb = getPvPSupabase();
+  if (!sb) {
+    console.log('⚠️ sendPvPCombatResult: Sin Supabase');
+    return;
+  }
+
+  let winnerId = null;
+  if (winnerRole === 'player') {
+    winnerId = pvpPlayerRole === 'player1' ? pvpActiveMatch.player1Id : pvpActiveMatch.player2Id;
+  } else if (winnerRole === 'ai') {
+    winnerId = pvpPlayerRole === 'player1' ? pvpActiveMatch.player2Id : pvpActiveMatch.player1Id;
+  }
+  // Si es 'draw', winnerId = null
+
+  const update = {
+    p1_total: player1Total,
+    p2_total: player2Total,
+    winner_id: winnerId,
+    last_round_result: winnerRole
+  };
+
+  try {
+    const { error } = await sb
+      .from('pvp_matches')
+      .update(update)
+      .eq('id', pvpActiveMatch.matchId);
+
+    if (error) {
+      console.error('❌ Error enviando resultado:', error);
+    } else {
+      console.log('✅ Resultado enviado:', { winnerId, player1Total, player2Total, winnerRole });
+    }
+  } catch (e) {
+    console.error('❌ Exception:', e);
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════
    PROCESAR RESULTADO
 ═══════════════════════════════════════════════════════════ */
 
@@ -424,12 +486,44 @@ function handlePvPResult(match) {
   const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
   if (!user) return;
 
+  console.log('📊 handlePvPResult - Match:', match);
+
+  // Determinar si el usuario actual ganó
   const isWinner = match.winner_id === user.id;
-  processPvPVictory(isWinner);
+  const isDraw = match.winner_id === null && match.p1_total !== undefined && match.p2_total !== undefined;
+
+  console.log('🎯 isWinner:', isWinner, '| isDraw:', isDraw, '| winner_id:', match.winner_id);
+
+  // Procesar resultado
+  if (isDraw) {
+    console.log('⚖️ Empate');
+    processPvPRoundResult('draw');
+  } else if (isWinner) {
+    console.log('✅ Victoria');
+    processPvPRoundResult('win');
+  } else {
+    console.log('❌ Derrota');
+    processPvPRoundResult('loss');
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════
-   PROCESAR VICTORIA/DERROTA
+   PROCESAR RESULTADO DE RONDA (NUEVO)
+═══════════════════════════════════════════════════════════ */
+
+window.processPvPRoundResult = async function (result) {
+  if (!window._pvpMode || !pvpActiveMatch) return;
+
+  const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
+  if (!user) return;
+
+  // No es el final del juego aún, solo una ronda
+  // El juego continúa automáticamente en index.html
+  console.log('🎮 Ronda resuelta:', result);
+};
+
+/* ═══════════════════════════════════════════════════════════
+   PROCESAR VICTORIA/DERROTA (FINAL DEL JUEGO)
 ═══════════════════════════════════════════════════════════ */
 
 window.processPvPVictory = async function (isWinner) {

@@ -4833,6 +4833,12 @@ function doCombat() {
   updateStats();
   renderScoreTrack();
   
+  // 🎮 SINCRONIZAR RESULTADO A SUPABASE EN PVP
+  if (window._pvpMode && typeof window.sendPvPCombatResult === 'function') {
+    window.sendPvPCombatResult(p1Total, p2Total, winner);
+    console.log('📤 Resultado enviado a Supabase:', { p1Total, p2Total, winner });
+  }
+  
   // Animations
   spawnParticles(winner);
   if(winner === 'player') document.getElementById('zone-p2').style.animation = 'shakeRight 0.4s ease';
