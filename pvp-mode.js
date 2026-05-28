@@ -283,6 +283,8 @@ function listenForPvPAcceptance(matchId) {
   const sb = getPvPSupabase();
   if (!sb) return;
 
+  console.log('🔔 Escuchando aceptación de:', matchId);
+
   const channel = sb
     .channel('pvp-acceptance-' + matchId)
     .on(
@@ -295,17 +297,29 @@ function listenForPvPAcceptance(matchId) {
       },
       (payload) => {
         const match = payload.new;
+        console.log('📊 Match actualizado:', match);
+        
         if (match.status === 'ready' && match.player2_id) {
           console.log('✅ Invitación aceptada por:', match.player2_name);
           sb.removeChannel(channel);
+          
+          // Actualizar pvpActiveMatch con los datos completos
+          if (pvpActiveMatch) {
+            pvpActiveMatch.player2Id = match.player2_id;
+            pvpActiveMatch.player2Name = match.player2_name;
+          }
+          
           alert(`✅ ${match.player2_name} aceptó! Entrando al combate...`);
           
           // Ir al combate INMEDIATAMENTE sin esperar
+          console.log('🎮 Llamando startPvPBattle()');
           startPvPBattle(matchId);
         }
       }
     )
     .subscribe();
+    
+  console.log('🔔 Escuchador activado para:', matchId);
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -313,28 +327,59 @@ function listenForPvPAcceptance(matchId) {
 ═══════════════════════════════════════════════════════════ */
 
 window.startPvPBattle = function (matchId) {
+  console.log('🎮 startPvPBattle llamado con matchId:', matchId);
+  console.log('📍 pvpActiveMatch:', pvpActiveMatch);
+  
   if (!pvpActiveMatch) {
-    alert('Error: Sin match activo');
+    console.error('❌ Error: pvpActiveMatch es null');
+    alert('Error: Sin información del match');
+    return;
+  }
+  
+  if (!pvpActiveMatch.matchId) {
+    console.error('❌ Error: matchId no está en pvpActiveMatch');
+    alert('Error: Sin ID de match');
     return;
   }
 
+  console.log('✅ pvpActiveMatch válido, inicializando combate...');
+
   window._pvpMode = true;
   window._pvpMatchId = matchId;
-  window._pvpCombatStarted = false; // Reset flag para nueva batalla
-  window._pvpCombatData = null; // Reset datos de combate
-
-  // Reemplazar nombre de IA por nombre del oponente
+  window._pvpCombatStarted = false;
+  window._pvpCombatData = null;
   window._pvpOpponentName = pvpOpponentName;
 
-  if (typeof dealHands === 'function') dealHands();
-  if (typeof window.showScreen === 'function') window.showScreen('battle');
+  console.log('🎴 Datos PVP inicializados:', {
+    _pvpMode: window._pvpMode,
+    _pvpMatchId: window._pvpMatchId,
+    pvpPlayerRole: pvpPlayerRole,
+    opponentName: pvpOpponentName
+  });
+
+  // Cambiar a pantalla de combate
+  if (typeof dealHands === 'function') {
+    console.log('📦 Repartiendo cartas...');
+    dealHands();
+  }
+  
+  if (typeof window.showScreen === 'function') {
+    console.log('📺 Mostrando pantalla de batalla...');
+    window.showScreen('battle');
+  } else {
+    console.warn('⚠️ showScreen no disponible');
+  }
+  
   if (typeof renderHand === 'function') renderHand();
   if (typeof updateStats === 'function') updateStats();
   if (typeof renderScoreTrack === 'function') renderScoreTrack();
   if (typeof updatePhase === 'function') updatePhase('⚔ PVP - Elige tu carta');
   if (typeof setLog === 'function') setLog('¡Selecciona una carta!');
 
+  console.log('🔔 Suscribiendo a cambios de match...');
   subscribeToPvPMatch(matchId);
+  
+  console.log('✅ startPvPBattle completado');
 };
 
 /* ═══════════════════════════════════════════════════════════
